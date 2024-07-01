@@ -9,7 +9,7 @@ bcrypt = Bcrypt(app)  # 비밀번호 암호화를 위한 Bcrypt 설정
 
 # MongoDB 클라이언트 설정
 client = MongoClient('localhost', 27017)
-db = client['your_database_name']  # 사용할 데이터베이스 이름 설정
+db = client['rollingpaper']  # 사용할 데이터베이스 이름 설정
 users_collection = db['users']  # 사용자 컬렉션 설정
 messages_collection = db['messages']  # 메시지 컬렉션 설정
 
