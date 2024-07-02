@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
 from flask import url_for
+import uuid
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # 세션 데이터 암호화에 사용되는 비밀 키 설정
@@ -90,10 +91,11 @@ def paper(user_id):
         file_url = message.get('file_url')
         if file_url:
             file_extension = file_url.rsplit('.', 1)[1].lower()
-            message['file_url'] = url_for('static', filename=file_url) if file_extension in {'jpg', 'jpeg', 'png'} else file_url
+            message['file_url'] = url_for('static', filename=file_url)
         messages_with_file_url.append(message)
 
     return render_template('paper.html', messages=messages_with_file_url, recipient=recipient)
+
 
 @app.route('/message', methods=['POST'])
 def message():
@@ -107,10 +109,11 @@ def message():
     file = request.files['file']
     file_url = None
     if file and allowed_file(file.filename):
-        filename = file.filename
+        filename = f"{uuid.uuid4().hex}.{file.filename.rsplit('.', 1)[1].lower()}"
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        file_url = url_for('static', filename=os.path.join('uploads', filename))
+        # Use '/' instead of os.path.join for URL paths
+        file_url = f"uploads/{filename}"
 
     messages_collection.insert_one({
         'content': content,

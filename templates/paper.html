@@ -14,16 +14,14 @@
             {% if message.file_url %}
             {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %}
             <audio controls>
-                <source src="{{ url_for('static', filename=message.file_url.split('/')[-1]) }}"
-                    type="audio/{{ message.file_url.split('.')[-1] }}">
+                <source src="{{ message.file_url }}" type="audio/{{ message.file_url.split('.')[-1] }}">
                 Your browser does not support the audio element.
             </audio>
             {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
             message.file_url.endswith('.png') %}
-            <img src="{{ url_for('static', filename=message.file_url.split('/')[-1]) }}" alt="Image" width="200">
+            <img src="{{ message.file_url }}" alt="Image" width="200">
             {% else %}
-            <a href="{{ url_for('static', filename=message.file_url.split('/')[-1]) }}" target="_blank">Download
-                File</a>
+            <a href="{{ message.file_url }}" target="_blank">Download File</a>
             {% endif %}
             {% endif %}
             {% if message.author == session['nickname'] %}
