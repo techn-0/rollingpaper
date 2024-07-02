@@ -83,7 +83,9 @@ def register():
 def users():
     if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
         return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
-    users = users_collection.find()  # DB에서 모든 사용자 가져오기
+    
+
+    users = users_collection.find().sort('name', 1)  # 1은 오름차순, -1은 내림차순입니다.# DB에서 모든 사용자 가져오기
     return render_template('users.html', users=users)  # 유저 목록 페이지 렌더링
 
 @app.route('/logout')
