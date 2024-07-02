@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 import os
 from flask import url_for
 import uuid
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # 세션 데이터 암호화에 사용되는 비밀 키 설정
@@ -58,7 +59,14 @@ def register():
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')  # 비밀번호 암호화
 
-    users_collection.insert_one({'username': username, 'password': hashed_password, 'name': name, 'nickname': nickname})  # 사용자 정보 DB에 저장
+    
+
+    users_collection.insert_one({'username': username,
+                                'password': hashed_password,
+                                'name': name,
+                                'nickname': nickname,
+                                'profile_picture': None
+                                })  # 사용자 정보 DB에 저장
 
     success = '회원가입이 완료되었습니다.'
     return render_template('login.html', success=success)
@@ -145,6 +153,27 @@ def delete_message(message_id):
     messages_collection.delete_one({'_id': ObjectId(message_id)})
     
     return redirect(url_for('paper', user_id=message['recipient_id']))
+
+
+
+#프로필업로드
+@app.route('/upload_profile_picture/<user_id>', methods=['GET', 'POST'])
+def upload_profile_picture(user_id):
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = f"{uuid.uuid4().hex}.{file.filename.rsplit('.', 1)[1].lower()}"
+            file_path = os.path.join('static', 'propic', filename)
+            file.save(file_path)
+            
+            # MongoDB의 사용자 문서를 업데이트하여 프로필 사진 경로 저장
+            users_collection.update_one({'_id': ObjectId(user_id)}, {'$set': {'profile_picture': f'propic/{filename}'}})
+            
+            flash('프로필 사진 업로드 완료!')
+            return redirect(url_for('users'))
+    
+    return render_template('upload_profile_picture.html', user_id=user_id)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

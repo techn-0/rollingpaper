@@ -6,13 +6,21 @@
 </head>
 
 <body>
+    <!-- 여기에 프로필 수정 페이지로 가는 링크가 있어야해 -->
     <h2>Users</h2>
     <!-- 사용자 목록 출력 -->
     <ul>
         {% for user in users %}
         <li>
-            {{ user.name }} <!-- 사용자 이름 출력 -->
-            <a href="{{ url_for('paper', user_id=user._id) }}">View Paper</a> <!-- 롤링 페이퍼 페이지로 이동하는 링크 -->
+            <div>
+                {% if user.profile_picture %}
+                <img src="{{ url_for('static', filename=user.profile_picture) }}" alt="Profile Picture" width="50">
+                {% else %}
+                <!-- 기본 프로필 사진 또는 이미지 없을 때 대체할 내용 추가 -->
+                <img src="{{ url_for('static', filename='propic/default.jpg') }}" alt="" width="50">
+                {% endif %}
+                <a href="{{ url_for('paper', user_id=user._id) }}">{{ user.name }}</a>
+            </div>
         </li>
         {% endfor %}
     </ul>

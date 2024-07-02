@@ -8,6 +8,16 @@
 <body>
     <h2>Messages for {{ recipient['name'] }}</h2> <!-- 수신자 이름을 제목으로 출력 -->
 
+    <div>
+        {% if recipient.profile_picture %}
+        <img src="{{ url_for('static', filename=recipient.profile_picture) }}" alt="프로필" width="100">
+        {% else %}
+        <img src="{{ url_for('static', filename='default_profile.jpg') }}" alt="" width="100">
+        {% endif %}
+        <strong>{{ recipient.name }}</strong>
+    </div>
+    <hr>
+
     <ul>
         {% for message in messages %} <!-- 각 메시지에 대해 반복 -->
         <li>
