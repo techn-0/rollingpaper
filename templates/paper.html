@@ -12,7 +12,7 @@
         {% if recipient.profile_picture %}
         <img src="{{ url_for('static', filename=recipient.profile_picture) }}" alt="프로필" width="100">
         {% else %}
-        <img src="{{ url_for('static', filename='default_profile.jpg') }}" alt="" width="100">
+        <img src="{{ url_for('static', filename='default.jpg') }}" alt="" width="100">
         {% endif %}
         <strong>{{ recipient.name }}</strong>
     </div>
