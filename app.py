@@ -3,7 +3,9 @@ from flask_bcrypt import Bcrypt
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
+from flask import url_for
 import uuid
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # 세션 데이터 암호화에 사용되는 비밀 키 설정
@@ -49,49 +51,39 @@ def register():
     password = request.form['password']
     name = request.form['name']
     nickname = request.form['nickname']
-    
+
     existing_user = users_collection.find_one({'username': username})
     if existing_user:
         error = '이미 존재하는 아이디입니다.'
         return render_template('login.html', error=error)
-    
+
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    
-    # 프로필 사진 업로드 처리
-    profile_picture = None
-    if 'profile_pic' in request.files:
-        file = request.files['profile_pic']
-        if file and allowed_file(file.filename):
-            filename = f"{uuid.uuid4().hex}.{file.filename.rsplit('.', 1)[1].lower()}"
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            profile_picture = f"uploads/{filename}"  # 업로드된 프로필 사진 경로 저장
-    
-    # 새 사용자를 등록할 때 프로필 사진 경로와 함께 저장
+
+    profile_pic = request.files['profile_pic']  # 업로드된 프로필 사진 파일 가져오기
+    profile_pic_filename = None
+
+    if profile_pic and allowed_file(profile_pic.filename):
+        filename = f"{uuid.uuid4().hex}.{profile_pic.filename.rsplit('.', 1)[1].lower()}"
+        profile_pic_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        profile_pic.save(profile_pic_path)
+        profile_pic_filename = f"uploads/{filename}"
+
     users_collection.insert_one({
         'username': username,
         'password': hashed_password,
         'name': name,
         'nickname': nickname,
-        'profile_picture': profile_picture if profile_picture else "uploads/default.jpg"
+        'profile_picture': profile_pic_filename  # 프로필 사진 경로 저장
     })
-    
+
     success = '회원가입이 완료되었습니다.'
     return render_template('login.html', success=success)
-    
 
 @app.route('/users')
 def users():
     if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
         return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
-    
     users = users_collection.find()  # DB에서 모든 사용자 가져오기
-    
-    # 각 사용자의 프로필 사진 경로를 설정하고, 없는 경우 기본 이미지 경로를 사용
-    for user in users:
-        if 'profile_picture' not in user or not user['profile_picture']:
-            user['profile_picture'] = "uploads/default.jpg"
-    
     return render_template('users.html', users=users)  # 유저 목록 페이지 렌더링
 
 @app.route('/logout')
