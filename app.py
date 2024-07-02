@@ -38,6 +38,7 @@ def login():
     user = users_collection.find_one({'username': username})  # 사용자 이름으로 DB에서 사용자 찾기
     if user and bcrypt.check_password_hash(user['password'], password):  # 사용자가 존재하고 비밀번호가 일치하면
         session['username'] = username  # 세션에 사용자 이름 저장
+        session['nickname'] = user['nickname']  # 닉네임을 세션에 저장
         return redirect(url_for('users'))  # 유저 목록 페이지로 리다이렉트
     flash('Invalid username or password')  # 오류 메시지 출력
     return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
@@ -101,7 +102,7 @@ def message():
 
     recipient_id = request.form['recipient_id']
     content = request.form['content']
-    author = session['nickname']
+    author = session['nickname']  # 사용자 이름을 작성자로 설정
 
     file = request.files['file']
     file_url = None
@@ -126,7 +127,7 @@ def delete_message(message_id):
         return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
     
     message = messages_collection.find_one({'_id': ObjectId(message_id)})
-    if message['author'] == session['username']:
+    if message['author'] == session['nickname']:  # 사용자 이름과 비교
         messages_collection.delete_one({'_id': ObjectId(message_id)})
     return redirect(url_for('paper', user_id=message['recipient_id']))
 
