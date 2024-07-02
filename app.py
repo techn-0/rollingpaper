@@ -18,7 +18,7 @@ messages_collection = db['messages']  # 메시지 컬렉션 설정
 
 # 파일 업로드 설정
 UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'wav'}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'wav', 'mp4'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -41,7 +41,7 @@ def login():
         session['username'] = username  # 세션에 사용자 이름 저장
         session['nickname'] = user['nickname']  # 닉네임을 세션에 저장
         return redirect(url_for('users'))  # 유저 목록 페이지로 리다이렉트
-    flash('Invalid username or password')  # 오류 메시지 출력
+    flash('잘못된 유저네임 또는 비밀번호 입니다. ')  # 오류 메시지 출력
     return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
 
 @app.route('/register', methods=['POST'])

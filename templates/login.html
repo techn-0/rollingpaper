@@ -2,18 +2,18 @@
 <html>
 
 <head>
-    <title>Login/Register</title>
+    <title>Login/Register</title> <!-- 페이지 제목 설정 -->
 
     <script>
-        // 페이지 로드 시 오류 성공 메시지
+        // 페이지 로드 시 오류 또는 성공 메시지를 알림으로 표시
         document.addEventListener('DOMContentLoaded', function () {
-            var errorMessage = "{{ error }}";
-            if (errorMessage) {
-                alert(errorMessage);
+            var errorMessage = "{{ error }}";  // 서버에서 전달된 오류 메시지 가져오기
+            if (errorMessage) {  // 오류 메시지가 있으면
+                alert(errorMessage);  // 오류 메시지를 알림으로 표시
             }
-            var successMessage = "{{ success }}";
-            if (successMessage) {
-                alert(successMessage);
+            var successMessage = "{{ success }}";  // 서버에서 전달된 성공 메시지 가져오기
+            if (successMessage) {  // 성공 메시지가 있으면
+                alert(successMessage);  // 성공 메시지를 알림으로 표시
             }
         });
     </script>
@@ -24,26 +24,26 @@
     <h2>Login</h2>
     <!-- 로그인 폼 -->
     <form action="{{ url_for('login') }}" method="post">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="text" name="username" placeholder="Username" required> <!-- 사용자 이름 입력 필드 -->
+        <input type="password" name="password" placeholder="Password" required> <!-- 비밀번호 입력 필드 -->
 
-        <button type="submit">Login</button>
+        <button type="submit">Login</button> <!-- 로그인 버튼 -->
     </form>
     <h2>Register</h2>
     <!-- 회원가입 폼 -->
     <form action="{{ url_for('register') }}" method="post">
-        <input type="text" name="username" placeholder="username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="text" name="nickname" placeholder="NickName" required>
-        <button type="submit">Register</button>
+        <input type="text" name="username" placeholder="username" required> <!-- 사용자 이름 입력 필드 -->
+        <input type="password" name="password" placeholder="Password" required> <!-- 비밀번호 입력 필드 -->
+        <input type="text" name="name" placeholder="Name" required> <!-- 이름 입력 필드 -->
+        <input type="text" name="nickname" placeholder="NickName" required> <!-- 닉네임 입력 필드 -->
+        <button type="submit">Register</button> <!-- 회원가입 버튼 -->
     </form>
     <!-- 플래시 메시지 출력 -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
+    {% with messages = get_flashed_messages() %} <!-- 플래시 메시지를 가져오기 위한 블록 시작 -->
+    {% if messages %} <!-- 메시지가 있으면 -->
     <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
+        {% for message in messages %} <!-- 각 메시지에 대해 -->
+        <li>{{ message }}</li> <!-- 메시지를 리스트 아이템으로 출력 -->
         {% endfor %}
     </ul>
     {% endif %}

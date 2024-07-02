@@ -2,31 +2,37 @@
 <html>
 
 <head>
-    <title>Rolling Paper</title>
+    <title>Rolling Paper</title> <!-- 페이지 제목 설정 -->
 </head>
 
 <body>
-    <h2>Messages for {{ recipient['name'] }}</h2>
+    <h2>Messages for {{ recipient['name'] }}</h2> <!-- 수신자 이름을 제목으로 출력 -->
+
     <ul>
-        {% for message in messages %}
+        {% for message in messages %} <!-- 각 메시지에 대해 반복 -->
         <li>
-            <strong>{{ message.author }}</strong>: {{ message.content }}
-            {% if message.file_url %}
-            {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %}
-            <audio controls>
+            <strong>{{ message.author }}</strong>: {{ message.content }} <!-- 메시지 작성자와 내용 출력 -->
+            {% if message.file_url %} <!-- 파일 URL이 있으면 -->
+            {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %} <!-- 오디오 파일인 경우 -->
+            <audio controls> <!-- 오디오 플레이어 생성 -->
                 <source src="{{ message.file_url }}" type="audio/{{ message.file_url.split('.')[-1] }}">
-                Your browser does not support the audio element.
+                <!-- 오디오 소스 설정 -->
             </audio>
             {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
-            message.file_url.endswith('.png') %}
-            <img src="{{ message.file_url }}" alt="Image" width="200">
-            {% else %}
-            <a href="{{ message.file_url }}" target="_blank">Download File</a>
+            message.file_url.endswith('.png') %} <!-- 이미지 파일인 경우 -->
+            <img src="{{ message.file_url }}" alt="Image" width="200"> <!-- 이미지 출력 -->
+
+            <!-- 영상 파일인 경우 -->
+            {% elif message.file_url.endswith('.mp4')%}
+            <video src="{{ message.file_url }}" controls></video>
+
+            {% else %} <!-- 그 외의 파일인 경우 -->
+            <a href="{{ message.file_url }}" target="_blank">Download File</a> <!-- 파일 다운로드 링크 출력 -->
             {% endif %}
             {% endif %}
-            {% if message.author == session['nickname'] %}
-            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post">
-                <button type="submit">Delete</button>
+            {% if message.author == session['nickname'] %} <!-- 메시지 작성자가 현재 세션의 닉네임과 동일하면 -->
+            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post"> <!-- 메시지 삭제 폼 -->
+                <button type="submit">Delete</button> <!-- 삭제 버튼 -->
             </form>
             {% endif %}
         </li>
@@ -34,15 +40,15 @@
     </ul>
 
     <form action="{{ url_for('message') }}" method="post" enctype="multipart/form-data">
-        <textarea name="content" placeholder="쪽지를 입력하세요." required></textarea>
+        <textarea name="content" placeholder="쪽지를 입력하세요." required></textarea> <!-- 쪽지 입력 필드 -->
         <br>
-        <input type="file" name="file">
+        <input type="file" name="file"> <!-- 파일 업로드 필드 -->
         <br>
-        <input type="hidden" name="recipient_id" value="{{ recipient['_id'] }}">
-        <button type="submit">Send</button>
+        <input type="hidden" name="recipient_id" value="{{ recipient['_id'] }}"> <!-- 수신자 ID를 숨은 입력 필드로 전송 -->
+        <button type="submit">Send</button> <!-- 전송 버튼 -->
     </form>
 
-    <a href="{{ url_for('users') }}">Go Back</a>
+    <a href="{{ url_for('users') }}">Go Back</a> <!-- 사용자 목록 페이지로 돌아가는 링크 -->
 </body>
 
 </html>
