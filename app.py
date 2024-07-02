@@ -162,6 +162,21 @@ def delete_message(message_id):
     
     return redirect(url_for('paper', user_id=message['recipient_id']))
 
+@app.route('/my_messages')
+def my_messages():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+
+    # 현재 사용자의 닉네임을 가져옵니다.
+    nickname = session['nickname']
+
+    # 현재 사용자가 작성한 모든 쪽지를 가져옵니다.
+    messages = messages_collection.find({'author': nickname})
+
+    return render_template('my_messages.html', messages=messages)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+    
