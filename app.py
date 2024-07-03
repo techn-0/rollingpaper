@@ -83,7 +83,6 @@ def register():
 def users():
     if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
         return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
-    
 
     users = users_collection.find().sort('name', 1)  # 1은 오름차 -1은 내림차 DB에서 모든 사용자 가져오기
     return render_template('users.html', users=users)  # 유저 목록 페이지 렌더링
@@ -113,7 +112,6 @@ def paper(user_id):
         messages_with_file_url.append(message)
 
     return render_template('paper.html', messages=messages_with_file_url, recipient=recipient)
-
 
 @app.route('/message', methods=['POST'])
 def message():
@@ -162,7 +160,6 @@ def update_data():
     
     return '', 204
 
-
 @app.route('/delete_message/<message_id>', methods=['POST'])
 def delete_message(message_id):
     if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
@@ -185,6 +182,28 @@ def delete_message(message_id):
     
     return redirect(url_for('paper', user_id=message['recipient_id']))
 
+@app.route('/delete_my_message/<message_id>', methods=['POST'])
+def delete_my_message(message_id):
+    if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
+        return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
+    
+    message = messages_collection.find_one({'_id': ObjectId(message_id)})
+    if not message:
+        flash('메모를 찾을 수 없습니다.')
+        return redirect(url_for('paper', user_id=message['recipient_id']))
+
+    # 파일 경로가 존재하면 파일을 삭제합니다.
+    file_url = message.get('file_url')
+    if file_url:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(file_url))
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    
+    # 메모를 삭제합니다.
+    messages_collection.delete_one({'_id': ObjectId(message_id)})
+    
+    return redirect(url_for('my_messages', user_id=message['recipient_id']))
+
 @app.route('/my_messages')
 def my_messages():
     if 'username' not in session:
@@ -194,11 +213,31 @@ def my_messages():
     nickname = session['nickname']
 
     # 현재 사용자가 작성한 모든 쪽지를 가져옵니다.
-    messages = messages_collection.find({'author': nickname})
+    messages = list(messages_collection.find({'author': nickname}))
 
-    return render_template('my_messages.html', messages=messages)
+    # 가져온 쪽지의 recipient_id 리스트를 만듭니다.
+    recipient_ids = [message['recipient_id'] for message in messages]
+    recipient_ids = [ObjectId(id_str) for id_str in recipient_ids]
 
+    # 해당 쪽지를 받은 유저의 이름을 가져옵니다. (recipient_id를 가진 유저 name을 조회)
+    ToUsers = users_collection.find({'_id': {'$in': recipient_ids}}, {'_id': 1, 'name': 1})
+    ToUsers_dict = {str(user['_id']): user.get('name', 'No Name') for user in ToUsers}
 
+    # 메시지와 수신자의 이름을 결합합니다.
+    final_result = []
+    for message in messages:
+        recipient_id = str(message['recipient_id'])
+        ToName = ToUsers_dict.get(recipient_id, "Name not found")
+        final_result.append({
+            '_id' : message['_id'],
+            'content': message['content'],
+            'file_url': message.get('file_url'),
+            'author': message['author'],
+            'theme' : message['theme'],
+            'ToName': ToName
+        })
+    
+    return render_template('my_messages.html', messages=final_result)
 
 #프로필 수정
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -231,21 +270,6 @@ def edit_profile():
             'nickname': nickname,
             'profile_picture': profile_pic_filename
         }
-
-        current_password = request.form.get('current_password')
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
-
-        if current_password and new_password and confirm_password:
-            if not bcrypt.check_password_hash(user['password'], current_password):
-                flash('현재 비밀번호가 잘못되었습니다.')
-                return render_template('edit_profile.html', user=user)
-            if new_password != confirm_password:
-                flash('새 비밀번호가 일치하지 않습니다.')
-                return render_template('edit_profile.html', user=user)
-            hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-            update_fields['password'] = hashed_new_password
-
         users_collection.update_one(
             {'username': username},
             {'$set': update_fields}
@@ -257,7 +281,40 @@ def edit_profile():
 
     return render_template('edit_profile.html', user=user)
 
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    if 'username' not in session:
+        return redirect(url_for('index'))
 
+    username = session['username']
+    user = users_collection.find_one({'username': username})
+
+    current_password = request.form.get('current_password')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+
+    if current_password and new_password and confirm_password:
+        if not bcrypt.check_password_hash(user['password'], current_password):
+            flash('현재 비밀번호가 잘못되었습니다.')
+            return redirect(url_for('edit_profile'))
+
+        if new_password != confirm_password:
+            flash('새 비밀번호가 일치하지 않습니다.')
+            return redirect(url_for('edit_profile'))
+
+        hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+
+        users_collection.update_one(
+            {'username': username},
+            {'$set': {'password': hashed_new_password}}
+        )
+
+        flash('비밀번호가 성공적으로 변경되었습니다.')
+        return redirect(url_for('edit_profile'))
+    
+    # 혹시 모를 예외 처리
+    flash('비밀번호 변경에 실패했습니다.')
+    return redirect(url_for('edit_profile'))
 
 #회원탈퇴
 @app.route('/delete_profile', methods=['POST'])
@@ -288,8 +345,6 @@ def delete_profile():
     else:
         flash('회원 탈퇴 실패: 이미 처리된 사용자입니다.')
         return redirect(url_for('edit_profile'))
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
