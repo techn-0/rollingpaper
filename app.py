@@ -12,7 +12,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-client = MongoClient(os.getenv('MONGODB_URI'))
+client = MongoClient('mongodb://test:test@localhost',27017)
 db = client['user_database'] # 사용할 데이터베이스 이름 설정
 users_collection = db['users']  # 사용자 컬렉션 설정
 messages_collection = db['messages']  # 메시지 컬렉션 설정
@@ -37,7 +37,7 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('login2.html')
+    return render_template('login.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -51,7 +51,7 @@ def login():
             response.set_cookie('token', token, httponly=True) #쿠키설정
             return response
         return jsonify({'message': '잘못된 유저네임 또는 비밀번호 입니다.'}), 401
-    return render_template('login2.html')
+    return render_template('login.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
