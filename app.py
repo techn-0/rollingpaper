@@ -42,8 +42,8 @@ def login():
         session['username'] = username  # 세션에 사용자 이름 저장
         session['nickname'] = user['nickname']  # 닉네임을 세션에 저장
         return redirect(url_for('users'))  # 유저 목록 페이지로 리다이렉트
-    flash('잘못된 유저네임 또는 비밀번호 입니다. ')  # 오류 메시지 출력
-    return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
+    error = '잘못된 유저네임 또는 비밀번호 입니다.'
+    return render_template('login.html', error=error)
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -85,7 +85,7 @@ def users():
         return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
     
 
-    users = users_collection.find().sort('name', 1)  # 1은 오름차순, -1은 내림차순입니다.# DB에서 모든 사용자 가져오기
+    users = users_collection.find().sort('name', 1)  # 1은 오름차 -1은 내림차 DB에서 모든 사용자 가져오기
     return render_template('users.html', users=users)  # 유저 목록 페이지 렌더링
 
 @app.route('/logout')
