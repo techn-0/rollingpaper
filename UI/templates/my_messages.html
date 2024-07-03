@@ -2,39 +2,146 @@
 <html>
 
 <head>
-    <title>My Messages</title>
+  <title>My Messages</title>
+  <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet"> <!--tailwind 관련 css파일-->
 </head>
 
 <body>
-    <h2>My Messages</h2>
 
-    <ul>
+  <div class="bg-stone-800 h-screen flex flex-col">
+
+    <!--상단 | 롤링페이퍼 주인 이름과 뒤로가기 버튼 -->
+    <div class="w-full">
+      <nav class="bg-green-700 shadow">
+        <div class="px-8 mx-auto">
+          <div class="flex items-center justify-between h-16">
+            <div class="w-full justify-between flex items-center">
+              <div class="flex-shrink-0">
+                <h2 class="m-5 text-white font-black text-2xl">내가남긴 쪽지</h2>
+              </div>
+
+              <!--사이드바-->
+              <div class="hidden md:block">
+                <div class="flex items-baseline ml-10 space-x-4">
+
+                  <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="{{ url_for('edit_profile') }}">
+                    프로필수정
+                  </a>
+                  <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="{{ url_for('users') }}">
+                    뒤로가기
+                  </a>
+                  <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="{{ url_for('logout') }}">
+                    로그아웃
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="block">
+              <div class="flex items-center ml-4 md:ml-6">
+              </div>
+            </div>
+            <div class="flex -mr-2 md:hidden">
+              <button
+                class="text-gray-800 dark:text-white hover:text-gray-300 inline-flex items-center justify-center p-2 rounded-md focus:outline-none">
+                <svg width="20" height="20" fill="currentColor" class="w-8 h-8" viewBox="0 0 1792 1792"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M1664 1344v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45z">
+                  </path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="md:hidden">
+          <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              href="{{ url_for('users') }}">
+              뒤로가기
+            </a>
+            <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              href="{{ url_for('logout') }}">
+              로그아웃
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!--중간 영억 -->
+
+    <div class="flex h-full justify-center items-center">
+      <ul class="w-full relative flex flex-row justify-center items-start flex-wrap content-start">
         {% for message in messages %}
-        <li>
-            <strong>{{ message.author }}</strong>: {{ message.content }}
-            {% if message.file_url %}
-            {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %}
-            <audio controls>
-                <source src="{{ url_for('static', filename=message.file_url) }}"
-                    type="audio/{{ message.file_url.split('.')[-1] }}">
+
+        {% if message.theme == "yellow" %}
+        <li id="{{ message._id }}"
+          class="m-4 bg-yellow-200 border-yellow-600 text-yellow-600 border-l-4 p-2 min-w-[150px] max-w-sm ">
+          {% elif message.theme == "green" %}
+        <li id="{{ message._id }}"
+          class="m-4 bg-green-200 border-green-600 text-green-600 border-l-4 p-2 min-w-[150px] max-w-sm">
+          {% else %}
+        <li id="{{ message._id }}"
+          class="m-4 bg-stone-200 border-stone-600 text-stone-600 border-l-4 p-2 min-w-[150px] max-w-sm">
+          {% endif %}
+
+          <!-- 메시지 삭제 폼 -->
+          <div class="flex justify-end h-4">
+            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post"
+              class="text-[0] leading-none">
+              <!-- 메시지 삭제 버튼 -->
+              <button type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="w-3 h-3 text-gray-700" viewBox="0 0 1792 1792">
+                  <path
+                    d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z">
+                  </path>
+                </svg>
+              </button>
+            </form>
+          </div>
+
+          <!--파일 관련-->
+
+          {% if message.file_url %} <!-- 파일 URL이 있으면 -->
+          <div class="p-4 flex justify-center">
+            {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %} <!-- 오디오 파일인 경우 -->
+            <audio controls> <!-- 오디오 플레이어 생성 -->
+              <source src="{{ url_for('static', filename=message.file_url) }}"
+                type="audio/{{ message.file_url.split('.')[-1] }}">
+              <!-- 오디오 소스 설정 -->
             </audio>
             {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
-            message.file_url.endswith('.png') %}
-            <img src="{{ url_for('static', filename=message.file_url) }}" alt="Image" width="200">
-            {% elif message.file_url.endswith('.mp4') %}
+            message.file_url.endswith('.png') %} <!-- 이미지 파일인 경우 -->
+            <img src="{{ url_for('static', filename=message.file_url) }}" alt="Image" width="200"
+              style="-webkit-user-drag: none;"> <!-- 이미지 출력 -->
+            {% elif message.file_url.endswith('.mp4')%} <!-- 영상 파일인 경우 -->
             <video src="{{ url_for('static', filename=message.file_url) }}" controls></video>
-            {% else %}
+            {% else %} <!-- 그 외의 파일인 경우 -->
             <a href="{{ url_for('static', filename=message.file_url) }}" target="_blank">Download File</a>
+            <!-- 파일 다운로드 링크 출력 -->
             {% endif %}
-            {% endif %}
-            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post">
-                <button type="submit">Delete</button>
-            </form>
+          </div>
+          {% endif %}
+
+          <!-- 메시지 내용 표시 -->
+          <p class="text-2xl mx-5 text-center break-all">
+            {{ message.content }}
+          </p>
+
+          <!-- 메시지 받는 사람 표시 -->
+          <p class="font-bold text-lg mt-4 mx-2 pl-8 select-none text-right">
+            To. {{ message.ToName }}
+          </p>
+
         </li>
         {% endfor %}
-    </ul>
-
-    <a href="{{ url_for('users') }}">Go Back</a>
+      </ul>
+    </div>
+  </div>
 </body>
 
 </html>

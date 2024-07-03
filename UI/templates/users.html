@@ -16,18 +16,21 @@
           <div class="flex items-center justify-between h-16">
             <div class="w-full justify-between flex items-center">
               <div class="flex-shrink-0">
-                <h2 class="m-5 text-white font-black text-2xl">롤링페이퍼 리스트</h2>
+                <h2 class="m-5 text-white font-black text-2xl">6기 정글러들</h2>
               </div>
               <div class="hidden md:block">
                 <div class="flex items-baseline ml-10 space-x-4">
-                  <!-- 로그아웃 링크 -->
-                  <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                    href="{{ url_for('logout') }}">
-                    Logout
-                  </a>
                   <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                     href="{{ url_for('my_messages') }}">
-                    My Messages
+                    내가 남긴 쪽지
+                  </a>
+                  <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="{{ url_for('edit_profile') }}">
+                    프로필수정
+                  </a>
+                  <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="{{ url_for('logout') }}">
+                    로그아웃
                   </a>
                 </div>
               </div>
@@ -68,6 +71,7 @@
     <div class="container flex items-center justify-center w-full mx-auto mt-5 h-full">
       <ul class="flex flex-row w-full flex-wrap justify-center items-center">
         {% for user in users %}
+
         <!-- 롤링 페이퍼 페이지로 이동하는 링크 (아이템 전체에 링크 걸어둠)-->
         <li onclick="location.href='{{ url_for('paper', user_id=user._id) }}'"
           class="flex flex-row mb-2 border-gray-400 p-4">
