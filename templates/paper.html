@@ -82,88 +82,93 @@
 
 
 
-        <!--중간 | 작성된 쪽지들-->
-        <ul class="w-full h-full relative">
-            {% for message in messages %}
-
-            {% if message.theme == "yellow" %}
-            <li id="{{ message._id }}" style="top:{{ message.newy }}px; left:{{ message.newx }}px;"
-                class="postit left-0 top-0 absolute bg-yellow-200 border-yellow-600 text-yellow-600 border-l-4 p-2  min-w-[150px] max-w-sm ">
-                {% elif message.theme == "green" %}
-            <li id="{{ message._id }}" style="top:{{ message.newy }}px; left:{{ message.newx }}px;"
-                class="postit left-0 top-0 absolute bg-green-200 border-green-600 text-green-600 border-l-4 p-2  min-w-[150px] max-w-sm">
-                {% else %}
-            <li id="{{ message._id }}" style="top:{{ message.newy }}px; left:{{ message.newx }}px;"
-                class="postit left-0 top-0 absolute bg-stone-200 border-stone-600 text-stone-600 border-l-4 p-2  min-w-[150px] max-w-sm">
-                {% endif %}
-
-                {% if message.author == session['nickname'] %} <!-- 메시지 작성자가 현재 세션의 닉네임과 동일하면 -->
-                <div class="flex justify-end h-4">
-                    <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post"
-                        class="text-[0] leading-none"> <!-- 메시지 삭제 폼 -->
-
-                        <!-- 메시지 삭제 버튼 -->
-                        <button type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="w-3 h-3 text-gray-700" viewBox="0 0 1792 1792">
-                                <path
-                                    d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z">
-                                </path>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-                {% else %}
-                <div class="mt-4"></div>
-                {% endif %}
-
-                <!-- 메시지 내용 표시 -->
-                <p class="text-3xl mx-5 text-center">
-                    {{ message.content }}
-                </p>
-
-                <!--파일 관련-->
-                {% if message.file_url %} <!-- 파일 URL이 있으면 -->
-                {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %} <!-- 오디오 파일인 경우 -->
-                <audio controls> <!-- 오디오 플레이어 생성 -->
-                    <source src="{{ message.file_url }}" type="audio/{{ message.file_url.split('.')[-1] }}">
-                    <!-- 오디오 소스 설정 -->
-                </audio>
-                {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
-                message.file_url.endswith('.png') %} <!-- 이미지 파일인 경우 -->
-                <img src="{{ message.file_url }}" alt="Image" width="200"> <!-- 이미지 출력 -->
-
-                <!-- 영상 파일인 경우 -->
-                {% elif message.file_url.endswith('.mp4')%}
-                <video src="{{ message.file_url }}" controls></video>
-
-                {% else %} <!-- 그 외의 파일인 경우 -->
-                <a href="{{ message.file_url }}" target="_blank">Download File</a> <!-- 파일 다운로드 링크 출력 -->
-                {% endif %}
-                {% endif %}
-
-                <!-- 메시지 작성자 표시 -->
-                <p class="font-bold text-lg mt-4 mx-5">
-                    {{ message.author }}
-                </p>
-
-            </li>
-            {% endfor %}
-        </ul>
+           <!--중간 | 작성된 쪽지들-->
+    <ul class="w-full h-full relative">
+        {% for message in messages %}
+  
+        {% if message.theme == "yellow" %}
+        <li id="{{ message._id }}" style="top:{{ message.newy }}px; left:{{ message.newx }}px;"
+          class="postit cursor-pointer left-0 top-0 absolute bg-yellow-200 border-yellow-600 text-yellow-600 border-l-4 p-2  min-w-[150px] max-w-sm ">
+          {% elif message.theme == "green" %}
+        <li id="{{ message._id }}" style="top:{{ message.newy }}px; left:{{ message.newx }}px;"
+          class="postit cursor-pointer left-0 top-0 absolute bg-green-200 border-green-600 text-green-600 border-l-4 p-2  min-w-[150px] max-w-sm">
+          {% else %}
+        <li id="{{ message._id }}" style="top:{{ message.newy }}px; left:{{ message.newx }}px;"
+          class="postit cursor-pointer left-0 top-0 absolute bg-stone-200 border-stone-600 text-stone-600 border-l-4 p-2  min-w-[150px] max-w-sm">
+          {% endif %}
+  
+          {% if message.author == session['nickname'] %} <!-- 메시지 작성자가 현재 세션의 닉네임과 동일하면 -->
+          <div class="flex justify-end h-4">
+            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post"
+              class="text-[0] leading-none"> <!-- 메시지 삭제 폼 -->
+  
+              <!-- 메시지 삭제 버튼 -->
+              <button type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="w-3 h-3 text-gray-700" viewBox="0 0 1792 1792">
+                  <!--x버튼 도형 백터 만듦-->
+                  <path
+                    d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z">
+                  </path>
+                </svg>
+              </button>
+            </form>
+          </div>
+          {% else %}
+          <div class="mt-4"></div>
+          {% endif %}
+  
+          <!--파일 관련-->
+          {% if message.file_url %} <!-- 파일 URL이 있으면 -->
+          <div class="p-4 flex justify-center select-none ">
+            {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %} <!-- 오디오 파일인 경우 -->
+            <audio controls> <!-- 오디오 플레이어 생성 -->
+              <source src="{{ message.file_url }}" type="audio/{{ message.file_url.split('.')[-1] }}">
+              <!-- 오디오 소스 설정 -->
+            </audio>
+            {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
+            message.file_url.endswith('.png') %} <!-- 이미지 파일인 경우 -->
+            <img src="{{ message.file_url }}" alt="Image" width="200" style="-webkit-user-drag: none;"> <!-- 이미지 출력 -->
+  
+            <!-- 영상 파일인 경우 -->
+            {% elif message.file_url.endswith('.mp4')%}
+            <video src="{{ message.file_url }}" controls></video>
+  
+            {% else %} <!-- 그 외의 파일인 경우 -->
+            <a href="{{ message.file_url }}" target="_blank">Download File</a> <!-- 파일 다운로드 링크 출력 -->
+            {% endif %}
+          </div>
+          {% endif %}
+  
+          <!-- 메시지 내용 표시 -->
+          <p class="text-2xl mx-5 text-center select-none break-all">
+            {{ message.content }}
+          </p>
+  
+          <!-- 메시지 작성자 표시 -->
+          <p class="font-bold text-lg mt-4 mx-2 pl-8 select-none text-right">
+            From. {{ message.author }}
+          </p>
+  
+        </li>
+        {% endfor %}
+      </ul>
 
         <!--하단 | 메세지 작성 폼-->
         <div class="flex justify-center items-center">
             <!--테마 변경 버튼-->
-            <div class="flex flex-col justify-evenly items-center h-full">
-                <button id="stone" class="C_theme bg-stone-200 w-5 h-5 ring-2 ring-stone-400"></button>
-                <button id="green" class="C_theme bg-green-200 w-5 h-5"></button>
-                <button id="yellow" class="C_theme bg-yellow-200 w-5 h-5"></button>
+            <div>
+                <div class="flex flex-col justify-evenly items-center h-full rounded-lg bg-gray-400 p-4">
+                    <button id="stone" class="C_theme my-4 bg-stone-200 w-5 h-5 ring-2 ring-stone-600"></button>
+                    <button id="green" class="C_theme my-4 bg-green-200 w-5 h-5"></button>
+                    <button id="yellow" class="C_theme my-4 bg-yellow-200 w-5 h-5"></button>
+                </div>
             </div>
 
             <!--폼-->
             <form action="{{ url_for('message') }}" method="post" enctype="multipart/form-data"
-                class="w-full max-w-sm space-x-3 m-5">
-                <div class="w-full max-w-2xl px-5 py-5 m-auto bg-white/50 rounded-lg shadow dark:bg-gray-800">
+                class="w-full max-w-sm space-x-3 m-5 relative ">
+                <div class="w-full max-w-2xl px-5 py-5 m-auto bg-gray-400 rounded-lg shadow dark:bg-gray-800">
 
                     <div class="grid max-w-xl grid-cols-2 gap-4 m-auto">
                         <div class="col-span-2 lg:col-span-1">
@@ -228,11 +233,10 @@
                     let newTop = e.pageY - startY;
 
                     // 부모 요소의 크기 위치 기준으로 최대 상하좌우 거리 계산
-                    let parentOffset = $this.parent().offset();
                     let parentWidth = $this.parent().width();
-                    let parentHeight = $this.parent().height();
+                    let parentHeight = document.documentElement.scrollHeight; //상하길이의 경우 하단까지 포함하기 위해 부모 대신 사이트 총 높이 사용 
                     let maxLeft = parentWidth - $this.outerWidth();
-                    let maxTop = parentHeight - $this.outerHeight();
+                    let maxTop = parentHeight - $this.outerHeight() - topbarH;
 
                     //메모의 새 좌표 계산, 부모 영역을 벗어나지 않도록 제한
                     newLeft = Math.min(Math.max(newLeft, 0), maxLeft);
