@@ -33,4 +33,41 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#editForm').submit(function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);  // 폼 데이터를 FormData 객체로 생성
+        $.ajax({
+            type: 'POST',
+            url: '/message',
+            data: formData,
+            processData: false,
+            contentType: false, 
+            success: function(response) {
+                alert('메세지 등록 성공');
+            },
+            error: function(response) {
+                alert(response.responseJSON.message);  // JSON 응답에서 메시지 추출
+            }
+        });
+    });
+
+    $('#delete_msg').submit(function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);  // 폼 데이터를 FormData 객체로 생성
+        $.ajax({
+            type: 'POST',
+            url: '/delete_message/<message_id>',
+            data: formData,
+            processData: false,
+            contentType: false, 
+            success: function(response) {
+                alert('메세지 등록 성공');
+            },
+            error: function(response) {
+                alert(response.responseJSON.message);  // JSON 응답에서 메시지 추출
+            }
+        });
+    });
+
 });

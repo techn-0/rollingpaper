@@ -22,7 +22,7 @@
                                 <div class="flex items-baseline ml-10 space-x-4">
                                     <!-- 로그아웃 링크 -->
                                     <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                                        href=" ">
+                                        href="{{ url_for('my_messages') }}">
                                         내가 남긴 쪽지
                                     </a>
                                     <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -56,7 +56,7 @@
                 <div class="md:hidden">
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                            href="">
+                            href="{{ url_for('my_messages') }}">
                             내가 남긴 쪽지
                         </a>
                         <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
