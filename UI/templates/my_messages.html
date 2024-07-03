@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Messages</title>
+</head>
+
+<body>
+    <h2>My Messages</h2>
+
+    <ul>
+        {% for message in messages %}
+        <li>
+            <strong>{{ message.author }}</strong>: {{ message.content }}
+            {% if message.file_url %}
+            {% if message.file_url.endswith('.mp3') or message.file_url.endswith('.wav') %}
+            <audio controls>
+                <source src="{{ url_for('static', filename=message.file_url) }}"
+                    type="audio/{{ message.file_url.split('.')[-1] }}">
+            </audio>
+            {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
+            message.file_url.endswith('.png') %}
+            <img src="{{ url_for('static', filename=message.file_url) }}" alt="Image" width="200">
+            {% elif message.file_url.endswith('.mp4') %}
+            <video src="{{ url_for('static', filename=message.file_url) }}" controls></video>
+            {% else %}
+            <a href="{{ url_for('static', filename=message.file_url) }}" target="_blank">Download File</a>
+            {% endif %}
+            {% endif %}
+            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('users') }}">Go Back</a>
+</body>
+
+</html>

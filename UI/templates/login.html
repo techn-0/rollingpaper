@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login/Register</title> <!-- 페이지 제목 설정 -->
+  <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet"> <!--tailwind 관련 css파일-->
+</head>
+
+<body>
+  <script>
+    // 페이지 로드 시 오류 또는 성공 메시지를 알림으로 표시
+    document.addEventListener('DOMContentLoaded', function () {
+      var errorMessage = "{{ error }}";  // 서버에서 전달된 오류 메시지 가져오기
+      if (errorMessage) {  // 오류 메시지가 있으면
+        alert(errorMessage);  // 오류 메시지를 알림으로 표시
+      }
+      var successMessage = "{{ success }}";  // 서버에서 전달된 성공 메시지 가져오기
+      if (successMessage) {  // 성공 메시지가 있으면
+        alert(successMessage);  // 성공 메시지를 알림으로 표시
+      }
+    });
+  </script>
+
+  <div class="bg-stone-800 flex items-center justify-center space-x-20">
+    <!-- 로그인 박스 -->
+    <div class="h-screen font-sans bg-cover bg-landscape m-5">
+      <div class="container flex items-center justify-center flex-1 h-full mx-auto">
+        <div class="w-full max-w-lg">
+          <div class="leading-loose">
+
+            <!-- 로그인 폼 시작점 -->
+            <form action="{{ url_for('login') }}" method="post"
+              class="max-w-sm p-10 mx-auto my-10 rounded shadow-xl bg-white/50">
+              <div class="my-5 h-16 w-full">
+
+                <!-- 로그인 타이틀 -->
+                <p class="text-2xl text-center font-bold text-white">
+                  Login
+                </p>
+
+                <!-- 플래시 메시지 출력 -->
+                {% with messages = get_flashed_messages() %} <!-- 플래시 메시지를 가져오기 위한 블록 시작 -->
+                {% if messages %} <!-- 메시지가 있으면 -->
+                <ul class="mb-2 text-center text-sm text-white">
+                  {% for message in messages %} <!-- 각 메시지에 대해 -->
+                  <li>{{ message }}</li> <!-- 메시지를 리스트 아이템으로 출력 -->
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+              </div>
+
+
+
+              <!-- 아이디 입력 필드-->
+              <div class="mb-2">
+                <div class=" relative ">
+
+                  <input type="text" name="username" id="login-with-bg-email"
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                    placeholder="Username" required />
+                </div>
+              </div>
+
+              <!-- 비밀번호 입력 필드-->
+              <div class="mb-2">
+                <div class=" relative ">
+
+                  <input type="password" name="password" id="login-with-bg-password"
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                    placeholder="Password" required />
+                </div>
+              </div>
+
+              <!-- 로그인 버튼 -->
+              <div class="flex items-center justify-between mt-4">
+                <button type="submit"
+                  class="py-2 px-4  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                  로그인
+                </button>
+              </div>
+
+              <!--회원가입 창 여는 버튼-->
+              <div class="text-center">
+                <div id="myDiv"
+                  class="cursor-pointer mt-4 font-medium inline-block text-sm align-baseline text-500 text-stone-700 hover:text-green-400">
+                  계정이 없으신가요?
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 회원가입 박스 -->
+    <div id="signup" class="h-screen font-sans bg-cover bg-landscape hidden">
+      <div class="container flex items-center justify-center flex-1 h-full mx-auto">
+        <div class="w-full max-w-lg">
+          <div class="leading-loose">
+
+            <!--회원가입 폼 시작-->
+            <form action="{{ url_for('register') }}" method="post" enctype="multipart/form-data"
+              class="max-w-sm p-10 m-auto rounded shadow-xl bg-white/50">
+
+              <!--회원가입 타이틀-->
+              <p class="mb-8 text-2xl text-center font-bold text-white">
+                Register
+              </p>
+
+              <!-- 아이디 입력 -->
+              <div class="mb-2">
+                <div class=" relative ">
+                  <input type="text" name="username" id="login-with-bg-email" placeholder="Username" required
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
+                </div>
+              </div>
+              <!-- 비밀번호 입력 -->
+              <div class="mb-2">
+                <div class=" relative ">
+                  <input type="password" name="password" id="login-with-bg-password" placeholder="Password" required
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
+                </div>
+              </div>
+
+              <!-- 비밀번호 입력 -->
+              <div class="mb-2">
+                <div class=" relative ">
+                  <input type="password" name="password" id="login-with-bg-password" placeholder="Password" required
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
+                </div>
+              </div>
+
+              <!-- 이름 -->
+              <div class="mb-2">
+                <div class=" relative ">
+                  <input type="text" name="name" placeholder="Name" required
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
+                </div>
+              </div>
+
+              <!-- 닉네임 -->
+              <div class="mb-2">
+                <div class=" relative ">
+                  <input type="text" name="nickname" placeholder="NickName" required
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
+                </div>
+              </div>
+
+              <!-- 프로필 사진 업로드 필드 -->
+              <div class="mb-2">
+                <div class=" relative ">
+                  <input type="file" name="profile_pic" accept="image/*"
+                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
+                </div>
+              </div>
+
+              <!-- 회원가입 완료 버튼 -->
+              <div class="flex items-center justify-between mt-4">
+                <button type="submit"
+                  class="py-2 px-4  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    //회원가입 창 열고 닫는 버튼
+    $('#myDiv').on('click', function () {
+      $('#signup').toggleClass('hidden');
+      //hidden 클래스를 사용해서 회원가입 창 숨기고 보임
+
+      //하단 안내메세지
+      if ($('#myDiv').text().trim() === '계정이 없으신가요?') {
+        $('#myDiv').text('회원가입 닫기');
+      } else {
+        $('#myDiv').text('계정이 없으신가요?');
+      }
+
+    });
+
+  </script>
+
+</body>
+
+
+</html>
