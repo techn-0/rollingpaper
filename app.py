@@ -117,12 +117,13 @@ def paper(user_id):
 
 @app.route('/message', methods=['POST'])
 def message():
-    if 'username' not in session:
-        return redirect(url_for('index'))
-
-    recipient_id = request.form['recipient_id']
-    content = request.form['content']
-    author = session['nickname']  # 사용자 닉네임을 작성자로 설정
+    if "username" not in session:  # 사용자가 로그인되어 있지 않으면
+        return redirect(url_for("index"))  # 로그인 페이지로 리다이렉트
+    
+    recipient_id = request.form["recipient_id"]  # 쪽지 받을 사용자 ID 가져오기
+    content = request.form["content"]  # 쪽지 내용 가져오기
+    author = session['nickname']  # 사용자 이름을 작성자로 설정
+    theme = request.form["theme"] #테마 관련
 
     file = request.files['file']
     file_url = None
@@ -133,13 +134,33 @@ def message():
         # Use '/' instead of os.path.join for URL paths
         file_url = f"uploads/{filename}"
 
-    messages_collection.insert_one({
-        'content': content,
-        'recipient_id': recipient_id,
-        'author': author,
-        'file_url': file_url
-    })
+    messages_collection.insert_one(
+        {
+            "content": content,
+            "recipient_id": recipient_id,
+            'author': author,
+            'file_url': file_url,
+            "theme": theme
+        })  # 메시지 DB에 저장
+
     return redirect(url_for('paper', user_id=recipient_id))
+
+@app.route("/xy_update", methods=["POST"])
+def update_data():
+    data = request.json  # JSON 형태로 요청 데이터를 받음
+    id = data.get("id")  # JSON에서 ID 값 추출
+    new_x = data.get("newX")  # JSON에서 X 좌표 값 추출
+    new_y = data.get("newY")  # JSON에서 Y 좌표 값 추출
+    
+    # MongoDB에서 documents의 'messages' 컬렉션을 선택
+    collection = messages_collection
+    
+    # 'id'가 주어진 item_id와 일치하는 문서를 찾고, 'newx'와 'newy' 필드를 업데이트
+    collection.update_one(
+        {"_id": ObjectId(id)}, {"$set": {"newx": new_x, "newy": new_y}}
+    )
+    
+    return '', 204
 
 
 @app.route('/delete_message/<message_id>', methods=['POST'])
