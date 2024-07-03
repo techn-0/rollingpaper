@@ -122,7 +122,7 @@ def message():
 
     recipient_id = request.form['recipient_id']
     content = request.form['content']
-    author = session['nickname']  # 사용자 이름을 작성자로 설정
+    author = session['nickname']  # 사용자 닉네임을 작성자로 설정
 
     file = request.files['file']
     file_url = None
@@ -177,6 +177,9 @@ def my_messages():
 
     return render_template('my_messages.html', messages=messages)
 
+
+
+#프로필 수정
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
@@ -229,10 +232,41 @@ def edit_profile():
 
         session['nickname'] = nickname  # 세션에 닉네임 갱신
         flash('프로필이 성공적으로 변경되었습니다.')
-        return redirect(url_for('users'))
+        return redirect(url_for('edit_profile'))
 
     return render_template('edit_profile.html', user=user)
 
+
+
+#회원탈퇴
+@app.route('/delete_profile', methods=['POST'])
+def delete_profile():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    username = session['username']
+    user = users_collection.find_one({'username': username})
+    if user:
+        # 사용자와 관련된 모든 데이터를 삭제
+        users_collection.delete_one({'username': username})
+        messages_collection.delete_many({'author': user['nickname']})
+        messages_collection.delete_many({'recipient_id': str(user['_id'])})
+
+        #프로필사진 파일 삭제
+        profile_picture = user.get('profile_picture')
+        if profile_picture:
+            profile_pic_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(profile_picture))
+            if os.path.exists(profile_pic_path):
+                os.remove(profile_pic_path)
+        
+        # 세션 종료
+        session.clear()
+        
+        flash('회원탈퇴가 완료되었습니다.')
+        return redirect(url_for('index'))
+    else:
+        flash('회원 탈퇴 실패: 이미 처리된 사용자입니다.')
+        return redirect(url_for('edit_profile'))
 
 
 

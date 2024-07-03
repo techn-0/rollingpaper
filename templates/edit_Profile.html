@@ -14,11 +14,17 @@
         <input type="text" name="nickname" placeholder="NickName" value="{{ user.nickname }}" required>
         <input type="file" name="profile_pic" accept="image/*">
         <button type="submit">변경</button>
+
         <h3>비밀번호 변경</h3>
         <input type="password" name="current_password" placeholder="Current Password">
         <input type="password" name="new_password" placeholder="New Password">
         <input type="password" name="confirm_password" placeholder="Confirm New Password">
         <button type="submit">변경</button>
+    </form>
+
+
+    <form action="{{ url_for('delete_profile')}}" method="post">
+        <button type="submit" onclick="return confirm('정말 계정을 삭제하시겠습니까?');">회원탈퇴</button>
     </form>
 
     {% with messages = get_flashed_messages() %}
