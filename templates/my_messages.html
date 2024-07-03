@@ -23,14 +23,13 @@
                             <!--사이드바-->
                             <div class="hidden md:block">
                                 <div class="flex items-baseline ml-10 space-x-4">
-
-                                    <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                                        href="{{ url_for('edit_profile') }}">
-                                        프로필수정
-                                    </a>
                                     <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                         href="{{ url_for('users') }}">
-                                        뒤로가기
+                                        돌아가기
+                                    </a>
+                                    <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                        href="{{ url_for('edit_profile') }}">
+                                        프로필 편집
                                     </a>
                                     <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                         href="{{ url_for('logout') }}">
@@ -60,7 +59,11 @@
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                             href="{{ url_for('users') }}">
-                            뒤로가기
+                            돌아가기
+                        </a>
+                        <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                            href="{{ url_for('edit_profile') }}">
+                            프로필 편집
                         </a>
                         <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                             href="{{ url_for('logout') }}">
@@ -118,7 +121,7 @@
                         {% elif message.file_url.endswith('.jpg') or message.file_url.endswith('.jpeg') or
                         message.file_url.endswith('.png') %} <!-- 이미지 파일인 경우 -->
                         <img src="{{ url_for('static', filename=message.file_url) }}" alt="Image" width="200"
-                            style="-webkit-user-drag: none;"> <!-- 이미지 출력 -->
+                            class="select-none" style="-webkit-user-drag: none;"> <!-- 이미지 출력 -->
                         {% elif message.file_url.endswith('.mp4')%} <!-- 영상 파일인 경우 -->
                         <video src="{{ url_for('static', filename=message.file_url) }}" controls></video>
                         {% else %} <!-- 그 외의 파일인 경우 -->
@@ -129,7 +132,7 @@
                     {% endif %}
 
                     <!-- 메시지 내용 표시 -->
-                    <p class="text-2xl mx-5 text-center break-all">
+                    <p class="text-2xl mx-5 text-center select-none break-all">
                         {{ message.content }}
                     </p>
 
