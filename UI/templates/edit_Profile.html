@@ -3,10 +3,11 @@
 
 <head>
     <title>Edit Profile</title>
-    <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
 </head>
 
 <body>
+    <div class="flex flex-col h-screen">
     <div class="w-full">
         <nav class="bg-green-700 shadow">
             <div class="px-8 mx-auto">
@@ -18,15 +19,15 @@
                         <div class="hidden md:block">
                             <div class="flex items-baseline ml-10 space-x-4">
                                 <!-- 로그아웃 링크 -->
-                                <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                     href="{{ url_for('logout') }}">
                                     로그아웃
                                 </a>
-                                <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                     href="{{ url_for('my_messages') }}">
                                     내가 남긴 쪽지
                                 </a>
-                                <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                     href="{{ url_for('users') }}">
                                     돌아가기
                                 </a>
@@ -37,13 +38,14 @@
             </div>
         </nav>
     </div>
-    <div class="bg-stone-800 flex items-center justify-center space-x-20">
 
-        <div class="h-screen font-sans bg-cover bg-landscape m-5">
+    <!--중간-->
+    <div class="bg-stone-800 flex items-center justify-center space-x-20 flex-1">
+        <div class="h-full font-sans bg-cover bg-landscape">
+            <!-- 프로필 수정 폼 -->
             <div class="container flex items-center justify-center flex-1 h-full mx-auto">
                 <div class="w-full max-w-lg">
                     <div class="leading-loose">
-                        <!-- 프로필 수정 폼 -->
                         <form action="{{ url_for('edit_profile') }}" method="post" enctype="multipart/form-data"
                             class="max-w-sm p-10 mx-auto my-10 rounded shadow-xl bg-white/50">
                             <p class="text-2xl text-center font-bold text-white">
@@ -51,92 +53,123 @@
                             </p>
                             <div class="mb-2">
                                 <p>이름</p>
-                                <div class=" relative ">
+                                <div class="relative">
                                     <input type="text" name="name" placeholder="이름" value="{{ user.name }}"
-                                        class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                                        placeholder="Username" required>
+                                        class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                                        required>
                                 </div>
                             </div>
                             <div class="mb-2">
                                 <p>별명</p>
-                                <div class=" relative ">
+                                <div class="relative">
                                     <input type="text" name="nickname" placeholder="별명" value="{{ user.nickname }}"
-                                        class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                                        placeholder="Username" required>
+                                        class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                                        required>
                                 </div>
                             </div>
                             <div class="mb-2">
                                 <p>프로필 사진</p>
-                                <div class=" relative ">
+                                <div class="relative">
                                     <input type="file" name="profile_pic" accept="image/*"
-                                        class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                                        class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
                                 </div>
                             </div>
                             <div class="flex items-center justify-between mt-4">
                                 <button type="submit"
-                                    class="py-2 px-4  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
-                                    변경</button>
+                                    class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                                    변경
+                                </button>
                             </div>
-                            <p class="text-2xl text-center font-bold text-white" style="margin: 10px;">
-                                비밀번호 변경
-                            </p>
-                            <div class="mb-2">
-                                <div class=" relative ">
-                                    <input type="password" name="current_password" placeholder="현재 비밀번호" required
-                                        class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                            <div class="text-center">
+                                <div id="myDiv"
+                                    class="cursor-pointer mt-4 font-medium inline-block text-sm align-baseline text-500 text-stone-700 hover:text-green-400">
+                                    비밀번호 변경
                                 </div>
                             </div>
-                            <div class="mb-2">
-                                <div class=" relative ">
-                                    <input type="password" name="new_password" placeholder="새 비밀번호" required
-                                        class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class=" relative ">
-                                    <input type="password" name="confirm_password" placeholder="새 비밀번호 확인" required
-                                        class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
-                                </div>
-                            </div>
-                            <button type="submit"
-                                class="py-2 px-4  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
-                                변경
-                            </button>
-                            <div class="mb-2">
-                                <p class="text-2xl text-center font-bold text-white" style="margin: 10px;">
-                                    회원탈퇴
-                                </p>
-                                <div class="mb-2">
-                                    <form action="{{ url_for('delete_profile')}}" method="post">
-                                        <button type="submit" onclick="return confirm('정말 계정을 삭제하시겠습니까?');"
-                                            class="py-2 px-4  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
-                                            회원탈퇴
-                                        </button>
-                                        <div class="mb-2">
-                                            {% with messages = get_flashed_messages() %}
-                                            {% if messages %}
-                                            <ul>
-                                                {% for message in messages %}
-                                                <li>{{ message }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
-                                            {% endwith %}
-                                        </div>
-                                    </form>
-                                </div>
-
                         </form>
-
 
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
+        <!-- 비밀번호 변경 폼 -->
+        <form action="{{ url_for('change_password') }}" method="post"
+            class="max-w-sm p-10 mx-auto my-10 rounded shadow-xl bg-white/50 hidden" id="chPassword">
+            <p class="text-2xl text-center font-bold text-white">
+                비밀번호 변경
+            </p>
+            <div class="mb-2">
+                <div class="relative">
+                    <input type="password" name="current_password" placeholder="현재 비밀번호" required
+                        class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="relative">
+                    <input type="password" name="new_password" placeholder="새 비밀번호" required
+                        class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="relative">
+                    <input type="password" name="confirm_password" placeholder="새 비밀번호 확인" required
+                        class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                </div>
+            </div>
+            <button type="submit"
+                class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                변경
+            </button>
+        </form>
+
+        <!-- 회원탈퇴 폼 -->
+        <div class="mb-2">
+            <p class="text-2xl text-center font-bold text-white" style="margin: 10px;">
+                회원탈퇴
+            </p>
+            <form action="{{ url_for('delete_profile')}}" method="post">
+                <button type="submit" onclick="return confirm('정말 계정을 삭제하시겠습니까?');"
+                    class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                    회원탈퇴
+                </button>
+                <div class="mb-2">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <script>
+        //회원가입 창 열고 닫는 버튼
+        $('#myDiv').on('click', function () {
+            $('#chPassword').toggleClass('hidden');
+            //hidden 클래스를 사용해서 회원가입 창 숨기고 보임
 
+            //하단 안내메세지
+            if ($('#myDiv').text().trim() === '비밀번호 변경') {
+                $('#myDiv').text('비밀번호 변경 창 닫기');
+            } else {
+                $('#myDiv').text('비밀번호 변경');
+            }
+
+        });
+
+    </script>
 </body>
 
 </html>
