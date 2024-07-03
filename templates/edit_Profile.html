@@ -18,7 +18,6 @@
                             </div>
                             <div class="hidden md:block">
                                 <div class="flex items-baseline ml-10 space-x-4">
-                                    <!-- 로그아웃 링크 -->
                                     <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                         href="{{ url_for('my_messages') }}">
                                         내가 남긴 쪽지
@@ -91,14 +90,10 @@
                                     </div>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
 
             <!-- 비밀번호 변경 폼 -->
             <form action="{{ url_for('change_password') }}" method="post"
@@ -131,48 +126,32 @@
             </form>
 
             <!-- 회원탈퇴 폼 -->
-            <div class="mb-2">
-                <p class="text-2xl text-center font-bold text-white" style="margin: 10px;">
+            <form action="{{ url_for('delete_profile') }}" method="post">
+                <input type="hidden" name="action" value="delete_account"> <!-- Hidden 필드 추가 -->
+                <input type="hidden" name="name" value="{{ user.name }}"> <!-- Hidden 필드 추가 -->
+                <button type="submit" onclick="return confirm('정말 계정을 삭제하시겠습니까?');"
+                    class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                     회원탈퇴
-                </p>
-                <form action="{{ url_for('delete_profile')}}" method="post">
-                    <button type="submit" onclick="return confirm('정말 계정을 삭제하시겠습니까?');"
-                        class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
-                        회원탈퇴
-                    </button>
-                    <div class="mb-2">
-                        {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                        <ul class="text-white">
-                            {% for message in messages %}
-                            <li>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                        {% endwith %}
-                    </div>
-                </form>
-            </div>
+                </button>
+            </form>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        //회원가입 창 열고 닫는 버튼
+        // 비밀번호 변경 창 열고 닫는 버튼
         $('#myDiv').on('click', function () {
             $('#chPassword').toggleClass('hidden');
-            //hidden 클래스를 사용해서 회원가입 창 숨기고 보임
+            // hidden 클래스를 사용해서 비밀번호 변경 창 숨기고 보임
 
-            //하단 안내메세지
+            // 하단 안내메세지
             if ($('#myDiv').text().trim() === '비밀번호 변경') {
                 $('#myDiv').text('비밀번호 변경 창 닫기');
             } else {
                 $('#myDiv').text('비밀번호 변경');
             }
-
         });
-
     </script>
 </body>
 
