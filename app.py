@@ -49,8 +49,14 @@ def login():
 def register():
     username = request.form['username']
     password = request.form['password']
+    confirm_password = request.form['confirm_password']
     name = request.form['name']
     nickname = request.form['nickname']
+
+
+    if password != confirm_password:
+        error = '비밀번호가 일치하지 않습니다.'
+        return render_template('login.html', error=error)
 
     existing_user = users_collection.find_one({'username': username})
     if existing_user:
