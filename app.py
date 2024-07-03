@@ -177,6 +177,64 @@ def my_messages():
 
     return render_template('my_messages.html', messages=messages)
 
+@app.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
+        return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
+
+    username = session['username']
+    user = users_collection.find_one({'username': username})  # 세션에서 현재 사용자 가져오기
+
+    if request.method == 'POST':
+        name = request.form['name']
+        nickname = request.form['nickname']
+        profile_pic = request.files['profile_pic']
+        profile_pic_filename = user['profile_picture']
+
+        if profile_pic and allowed_file(profile_pic.filename):
+            if profile_pic_filename:
+                old_file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(profile_pic_filename))
+                if os.path.exists(old_file_path):
+                    os.remove(old_file_path)
+
+            filename = f"{uuid.uuid4().hex}.{profile_pic.filename.rsplit('.', 1)[1].lower()}"
+            profile_pic_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            profile_pic.save(profile_pic_path)
+            profile_pic_filename = f"uploads/{filename}"
+
+        update_fields = {
+            'name': name,
+            'nickname': nickname,
+            'profile_picture': profile_pic_filename
+        }
+
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        if current_password and new_password and confirm_password:
+            if not bcrypt.check_password_hash(user['password'], current_password):
+                flash('현재 비밀번호가 잘못되었습니다.')
+                return render_template('edit_profile.html', user=user)
+            if new_password != confirm_password:
+                flash('새 비밀번호가 일치하지 않습니다.')
+                return render_template('edit_profile.html', user=user)
+            hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+            update_fields['password'] = hashed_new_password
+
+        users_collection.update_one(
+            {'username': username},
+            {'$set': update_fields}
+        )
+
+        session['nickname'] = nickname  # 세션에 닉네임 갱신
+        flash('프로필이 성공적으로 변경되었습니다.')
+        return redirect(url_for('users'))
+
+    return render_template('edit_profile.html', user=user)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

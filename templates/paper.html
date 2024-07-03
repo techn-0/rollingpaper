@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <h2>Messages for {{ recipient['name'] }}</h2> <!-- 수신자 이름을 제목으로 출력 -->
+    <h2>For {{ recipient['name'] }}</h2> <!-- 수신자 이름을 제목으로 출력 -->
 
     <div>
         {% if recipient.profile_picture %}
@@ -58,7 +58,7 @@
         <button type="submit">Send</button> <!-- 전송 버튼 -->
     </form>
 
-    <a href="{{ url_for('users') }}">Go Back</a> <!-- 사용자 목록 페이지로 돌아가는 링크 -->
+    <a href="{{ url_for('users') }}">뒤로가기</a> <!-- 사용자 목록 페이지로 돌아가는 링크 -->
 </body>
 
 </html>
