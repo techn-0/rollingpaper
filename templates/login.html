@@ -7,20 +7,6 @@
 </head>
 
 <body>
-    <script>
-        // 페이지 로드 시 오류 또는 성공 메시지를 알림으로 표시
-        document.addEventListener('DOMContentLoaded', function () {
-            var errorMessage = "{{ error }}";  // 서버에서 전달된 오류 메시지 가져오기
-            if (errorMessage) {  // 오류 메시지가 있으면
-                alert(errorMessage);  // 오류 메시지를 알림으로 표시
-            }
-            var successMessage = "{{ success }}";  // 서버에서 전달된 성공 메시지 가져오기
-            if (successMessage) {  // 성공 메시지가 있으면
-                alert(successMessage);  // 성공 메시지를 알림으로 표시
-            }
-        });
-    </script>
-
     <div class="bg-stone-800 flex items-center justify-center space-x-20">
         <!-- 로그인 박스 -->
         <div class="h-screen font-sans bg-cover bg-landscape m-5">
@@ -29,8 +15,7 @@
                     <div class="leading-loose">
 
                         <!-- 로그인 폼 시작점 -->
-                        <form action="{{ url_for('login') }}" method="post"
-                            class="max-w-sm p-10 mx-auto my-10 rounded shadow-xl bg-white/50">
+                        <form id="loginForm" class="max-w-sm p-10 mx-auto my-10 rounded shadow-xl bg-white/50">
                             <div class="my-5 h-16 w-full">
 
                                 <!-- 로그인 타이틀 -->
@@ -98,8 +83,7 @@
                     <div class="leading-loose">
 
                         <!--회원가입 폼 시작-->
-                        <form action="{{ url_for('register') }}" method="post" enctype="multipart/form-data"
-                            class="max-w-sm p-10 m-auto rounded shadow-xl bg-white/50">
+                        <form id="signupForm" class="max-w-sm p-10 m-auto rounded shadow-xl bg-white/50">
 
                             <!--회원가입 타이틀-->
                             <p class="mb-8 text-2xl text-center font-bold text-white">
@@ -169,10 +153,8 @@
             </div>
         </div>
     </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script>
         //회원가입 창 열고 닫는 버튼
         $('#myDiv').on('click', function () {
@@ -189,7 +171,6 @@
         });
 
     </script>
-
 </body>
 
 

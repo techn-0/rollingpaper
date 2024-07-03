@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>Users</title> <!-- 페이지 제목 설정 -->
     <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
 </head>
@@ -26,11 +27,11 @@
                                         내가 남긴 쪽지
                                     </a>
                                     <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                                        href="{{ url_for('edit_profile') }}">
+                                        href="{{ url_for('edit_profile') }}"">
                                         프로필 편집
                                     </a>
-                                    <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                                        href="{{ url_for('logout') }}">
+                                    <a class=" text-gray-300 hover:text-gray-800 dark:hover:text-white px-3 py-2
+                                        rounded-md text-sm font-medium" href="{{ url_for('logout') }}">
                                         로그아웃
                                     </a>
                                 </div>
@@ -63,8 +64,8 @@
                             href="{{ url_for('edit_profile') }}">
                             프로필 편집
                         </a>
-                        <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                            href="{{ url_for('logout') }}">
+                        <a class=" text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md
+                            text-base font-medium" href="{{ url_for('logout') }}">
                             로그아웃
                         </a>
                     </div>
