@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+    <a href="{{ url_for('signup') }}">Create an account</a>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        //회원가입 창 열고 닫는 버튼
+        $('#myDiv').on('click', function () {
+            $('#signup').toggleClass('hidden');
+            //hidden 클래스를 사용해서 회원가입 창 숨기고 보임
+
+            //하단 안내메세지
+            if ($('#myDiv').text().trim() === '계정이 없으신가요?') {
+                $('#myDiv').text('회원가입 닫기');
+            } else {
+                $('#myDiv').text('계정이 없으신가요?');
+            }
+
+        });
+
+    </script>
+</body>
+</html>

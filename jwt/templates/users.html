@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title> <!-- 페이지 제목 설정 -->
+    <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="bg-stone-800 h-screen flex flex-col">
+
+        <!--상단 | 롤링페이퍼 주인 이름과 뒤로가기 버튼 -->
+        <div class="w-full">
+            <nav class="bg-green-700 shadow">
+                <div class="px-8 mx-auto">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="w-full justify-between flex items-center">
+                            <div class="flex-shrink-0">
+                                <h2 class="m-5 text-white font-black text-2xl">롤링페이퍼 리스트</h2>
+                            </div>
+                            <div class="hidden md:block">
+                                <div class="flex items-baseline ml-10 space-x-4">
+                                    <!-- 로그아웃 링크 -->
+                                    <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                        href=" ">
+                                        내가 남긴 쪽지
+                                    </a>
+                                    <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                        href=" ">
+                                        프로필 편집
+                                    </a>
+                                    <a class="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                        href="{{ url_for('logout') }}">
+                                        로그아웃
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <div class="flex items-center ml-4 md:ml-6">
+                            </div>
+                        </div>
+                        <div class="flex -mr-2 md:hidden">
+                            <button
+                                class="text-gray-800 dark:text-white hover:text-gray-300 inline-flex items-center justify-center p-2 rounded-md focus:outline-none">
+                                <svg width="20" height="20" fill="currentColor" class="w-8 h-8" viewBox="0 0 1792 1792"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M1664 1344v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45z">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                            href="">
+                            내가 남긴 쪽지
+                        </a>
+                        <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                            href="">
+                            프로필 편집
+                        </a>
+                        <a class="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                            href="{{ url_for('logout') }}">
+                            로그아웃
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 사용자 목록 출력 -->
+        <div class="container flex items-center justify-center w-full mx-auto mt-5 h-full">
+            <ul class="flex flex-row w-full flex-wrap justify-center items-center">
+                {% for user in users %}
+                <!-- 롤링 페이퍼 페이지로 이동하는 링크 (아이템 전체에 링크 걸어둠)-->
+                <li onclick="location.href='{{ url_for('paper', user_id=user._id) }}'"
+                    class="flex flex-row mb-2 border-gray-400 p-4">
+                    <div
+                        class="shadow select-none cursor-pointer bg-white/50 dark:bg-gray-800 rounded-md flex items-center p-4">
+                        <div class="flex flex-col items-center justify-center w-10 h-10 mr-4">
+                            <a href="#" class="relative block">
+                                <!--이미지 아이콘-->
+                                {% if user.profile_picture %}
+                                <img src="{{ url_for('static', filename=user.profile_picture) }}" alt="Profile Picture"
+                                    width="50" class="mx-auto object-cover rounded-full h-10 w-10 ">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='default_profile.jpg') }}"
+                                    alt="Default Profile Picture" width="50"
+                                    class="mx-auto object-cover rounded-full h-10 w-10 ">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div>
+                            <!-- 사용자 이름 출력 -->
+                            <div class="font-medium text-white">
+                                <a href="{{ url_for('paper', user_id=user._id) }}">{{ user.name }}</a>
+                            </div>
+                            <div class="text-sm text-stone-600">
+                                의 롤링페이퍼
+                            </div>
+                        </div>
+                        <button class="flex justify-end text-right m-5">
+                            <svg width="12" fill="currentColor" height="12" class="text-white" viewBox="0 0 1792 1792"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+</body>
+
+</html>
