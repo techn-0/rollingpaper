@@ -90,7 +90,7 @@
 
           <!-- 메시지 삭제 폼 -->
           <div class="flex justify-end h-4">
-            <form action="{{ url_for('delete_message', message_id=message._id) }}" method="post"
+            <form action="{{ url_for('delete_my_message', message_id=message._id) }}" method="post"
               class="text-[0] leading-none">
               <!-- 메시지 삭제 버튼 -->
               <button type="submit">

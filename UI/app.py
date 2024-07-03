@@ -182,6 +182,28 @@ def delete_message(message_id):
     
     return redirect(url_for('paper', user_id=message['recipient_id']))
 
+@app.route('/delete_my_message/<message_id>', methods=['POST'])
+def delete_my_message(message_id):
+    if 'username' not in session:  # 사용자가 로그인되어 있지 않으면
+        return redirect(url_for('index'))  # 로그인 페이지로 리다이렉트
+    
+    message = messages_collection.find_one({'_id': ObjectId(message_id)})
+    if not message:
+        flash('메모를 찾을 수 없습니다.')
+        return redirect(url_for('paper', user_id=message['recipient_id']))
+
+    # 파일 경로가 존재하면 파일을 삭제합니다.
+    file_url = message.get('file_url')
+    if file_url:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(file_url))
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    
+    # 메모를 삭제합니다.
+    messages_collection.delete_one({'_id': ObjectId(message_id)})
+    
+    return redirect(url_for('my_messages', user_id=message['recipient_id']))
+
 @app.route('/my_messages')
 def my_messages():
     if 'username' not in session:
@@ -207,6 +229,7 @@ def my_messages():
         recipient_id = str(message['recipient_id'])
         ToName = ToUsers_dict.get(recipient_id, "Name not found")
         final_result.append({
+            '_id' : message['_id'],
             'content': message['content'],
             'file_url': message.get('file_url'),
             'author': message['author'],
